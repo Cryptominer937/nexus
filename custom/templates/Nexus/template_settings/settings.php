@@ -37,6 +37,8 @@ if ($user->isLoggedIn()) {
   die();
 }
 
+var_dump(NexusUtill::languageFileToSmarty('general'));
+
 $smarty->assign(array(
   // NamelessMC 
     'SUBMIT' => $language->get('general', 'submit'),
@@ -249,7 +251,6 @@ if (!isset($_POST['sel_btn'])) {
         if (!count($errors)) {
           Session::flash('staff', NexusUtill::getLanguage('general', 'save_successfully'));
           Redirect::to(URL::build('/panel/core/templates', 'action=settings', 'template='. $_GET['template']));
-       
         }
       }
     } else {
