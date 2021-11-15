@@ -37,8 +37,6 @@ if ($user->isLoggedIn()) {
   die();
 }
 
-var_dump(NexusUtill::languageFileToSmarty('general'));
-
 $smarty->assign(array(
   // NamelessMC 
     'SUBMIT' => $language->get('general', 'submit'),
