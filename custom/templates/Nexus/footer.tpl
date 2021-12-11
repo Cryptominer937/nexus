@@ -1,22 +1,7 @@
 </div>
 </div>
-<html>
 
-<body>
-	<style type="text/css">
-		body {
-			-webkit-font-smoothing: antialiased;
-			-moz-font-smoothing: grayscale;
-		}
-
-		.ui.footer.segment {
-			margin: 5em 0em 0em;
-			padding: 5em 0em;
-		}
-	</style>
-
-
-	<div class="ui blue inverted vertical footer segment" style="padding:2rem;">
+	<div class="ui inverted vertical footer segment" id="footer">
 		<div class="ui center aligned container">
 			<div class="ui stackable inverted divided grid">
 				<div class="five wide column">
@@ -29,6 +14,9 @@
 						{if $PAGE_LOAD_TIME}
 						<span class="item" id="page_load"></span>
 						{/if}
+            {if isset($LOGGED_IN_USER)}
+              <a class="item" href="javascript:" onclick="toggleDarkLightMode()">{$DARK_LIGHT_MODE}</a>
+            {/if}
 					</div>
 				</div>
 				<div class="three wide column">
@@ -72,44 +60,49 @@
 			</div>
 		</div>
 
-		<style>
-			.ui.inverted.blue.segment {
-				background-color: {if ("{$FOOTER_COLOR}"==="#000000")}{$TEMPLATE_COLOR}{else}{$FOOTER_COLOR}{/if} !important;
-				color: #fff !important;
-			}
-		</style>
+  {if isset($GLOBAL_WARNING_TITLE)}
+    <div class="ui medium modal" id="modal-acknowledge">
+      <div class="header">
+        {$GLOBAL_WARNING_TITLE}
+      </div>
+      <div class="content">
+        {$GLOBAL_WARNING_REASON}
+      </div>
+      <div class="actions">
+        <a class="ui positive button" href="{$GLOBAL_WARNING_ACKNOWLEDGE_LINK}">{$GLOBAL_WARNING_ACKNOWLEDGE}</a>
+      </div>
+    </div>
+  {/if}
 
+  {foreach from=$TEMPLATE_JS item=script}
+    {$script}
+  {/foreach}
 
-		{if isset($GLOBAL_WARNING_TITLE)}
-		<div class="ui medium modal" id="modal-acknowledge">
-			<div class="header">
-				{$GLOBAL_WARNING_TITLE}
-			</div>
-			<div class="content">
-				{$GLOBAL_WARNING_REASON}
-			</div>
-			<div class="actions">
-				<a class="ui positive button"
-					href="{$GLOBAL_WARNING_ACKNOWLEDGE_LINK}">{$GLOBAL_WARNING_ACKNOWLEDGE}</a>
-			</div>
-		</div>
-		{/if}
+  {if isset($GLOBAL_WARNING_TITLE)}
+    <script type="text/javascript">
+      $('#modal-acknowledge').modal({ closable: false }).modal('show');
+    </script>
+  {/if}
 
-		{foreach from=$TEMPLATE_JS item=script}
-		{$script}
-		{/foreach}
+  {if isset($LOGGED_IN_USER)}
+    <script type="text/javascript">
+      function toggleDarkLightMode() {
+        $.post("{$DARK_LIGHT_MODE_ACTION}", { token: "{$DARK_LIGHT_MODE_TOKEN}" })
+          .done(function() {
+            window.location.reload();
+          });
 
-		{if isset($NEW_UPDATE) && ($NEW_UPDATE_URGENT != true)}
-		<script src="{$TEMPLATE.path}/js/core/update.js"></script>
-		{/if}
+        return false;
+      }
+    </script>
+  {/if}
 
-		{if !isset($EXCLUDE_END_BODY)}
-</body>
+  {if isset($NEW_UPDATE) && ($NEW_UPDATE_URGENT != true)}
+    <script src="{$TEMPLATE.path}/js/core/update.js"></script>
+  {/if}
 
-</html>
-{/if}
+{if !isset($EXCLUDE_END_BODY)}
+  </body>
 
-{if $ARC == 'true'}
-<script async src="{$ARC_ID}"></script>
-</script>
+  </html>
 {/if}
